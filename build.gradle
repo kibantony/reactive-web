@@ -1,0 +1,55 @@
+plugins {
+//	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'org.springframework.boot' version '2.4.0-SNAPSHOT'
+
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'org.springframework.boot'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+ext {
+	set('testcontainersVersion', "1.14.3")
+}
+
+dependencies {
+//	implementation 'org.neo4j.springframework.data:spring-data-neo4j-rx-spring-boot-starter:1.1.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
+
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation('org.neo4j.springframework.data:spring-data-neo4j-rx-spring-boot-test-autoconfigure:1.1.1') {
+		exclude group: 'org.neo4j.test', module: 'neo4j-harness'
+	}
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:neo4j'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
